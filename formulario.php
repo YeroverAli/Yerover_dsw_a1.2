@@ -4,10 +4,13 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Formulario</title>
+</head>
+<body>
+  <form action="registra_dudas.php" method="post">
     <label for="email">Correo electrónico:</label>
-    <input id="email" type="email">
+    <input id="email" name="email" type="email" requiered>
     <p>Elija su módulo</p>
-    <select id="modulo">
+    <select id="modulo" name="modulo" requiered>
         <option value="dew">dew</option>
         <option value="dor">dor</option>
         <option value="dpl">dpl</option>
@@ -18,11 +21,12 @@
         <option value="ipw">ipw</option>
     </select>
     <br><br>
-    <p>Asunto</p>
-    <input type="text" ></input>
-    <label for="asunto">
-</head>
-<body>
-    
+    <label for="asunto">Asunto</label>
+        <input id="asunto" name="asunto" type="text" required>
+    <p>Descripción</p>
+    <textarea id="descripcion" name="descripcion" rows="4" cols="40" requiered></textarea>
+    <br><br>
+        <button type="submit">Enviar</button>
+    </form>
 </body>
 </html>
