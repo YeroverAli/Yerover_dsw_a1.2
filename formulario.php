@@ -8,17 +8,18 @@
 <body>
   <form action="registra_dudas.php" method="post">
     <label for="email">Correo electrónico:</label>
-    <input id="email" name="email" type="email" requiered>
+    <input id="email" name="email" requiered>
     <p>Elija su módulo</p>
     <select id="modulo" name="modulo" requiered>
-        <option value="dew">dew</option>
-        <option value="dor">dor</option>
-        <option value="dpl">dpl</option>
-        <option value="dsw">dsw</option>
-        <option value="soj">soj</option>
-        <option value="cl4">cl4</option>
-        <option value="e1b">e1b</option>
-        <option value="ipw">ipw</option>
+        <option disabled selected>Elige una opción</option>
+        <option value="DEW">DEW</option>
+        <option value="DOR">DOR</option>
+        <option value="DPL">DPL</option>
+        <option value="DSW">DSW</option>
+        <option value="SOJ">SOJ</option>
+        <option value="CL4">CL4</option>
+        <option value="E1B">E1B</option>
+        <option value="IPW">IPW</option>
     </select>
     <br><br>
     <label for="asunto">Asunto</label>
