@@ -7,18 +7,22 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $errores = array();
     $modulos_validos = array("DEW", "DOR", "DPL", "DSW", "SOJ", "CL4", "E1B", "IPW");
     
-     if($email == "")
+    function comprobarEmail($correo){
+    global $errores;
+    if($correo == "")
         $errores[] = "No se ha escrito ningún email.";
-    else if(!filter_var($email, FILTER_VALIDATE_EMAIL))
-        $errores[] = "El email '$email' no es válido.";
+    else (!filter_var($correo, FILTER_VALIDATE_EMAIL))
+        $errores[] = "El email '$correo' no es válido.";
+    }
+
 
     if($modulo == "")
         $errores[] = "No se ha seleccionado ningún módulo.";
     else if(!in_array($modulo, $modulos_validos))
         $errores[] = "El módulo '$modulo' no es correcto.";
 
-    if(strlen($asunto) > 50)
-        $errores[] = "El asunto supera la cantidad máxima de caracteres (50).";
+    if(strlen($asunto) > 50 || ctype_alpha($asunto))
+        $errores[] = "El asunto tiene valores numericos o supera la cantidad máxima de caracteres (50).";
 
     if(strlen($descripcion) > 300)
         $errores[] = "La descripción supera el límite de caracteres (300).";
