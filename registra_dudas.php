@@ -6,28 +6,46 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $descripcion = trim($_POST["descripcion"]);
     $errores = array();
     $modulos_validos = array("DEW", "DOR", "DPL", "DSW", "SOJ", "CL4", "E1B", "IPW");
-    
-    function comprobarEmail($correo){
-    global $errores;
-    if($correo == "")
-        $errores[] = "No se ha escrito ningún email.";
-    else (!filter_var($correo, FILTER_VALIDATE_EMAIL))
-        $errores[] = "El email '$correo' no es válido.";
+
+    function validarEmail($correo) {
+        if ($correo == "") return "No se ha escrito ningún email.";
+        if (!filter_var($correo, FILTER_VALIDATE_EMAIL)) return "El email '$correo' no es válido.";
+        return true;
     }
 
+    function validarModulo($modulo, $modulos_validos) {
+        if ($modulo == "") return "No se ha seleccionado ningún módulo.";
+        if (!in_array($modulo, $modulos_validos)) return "El módulo '$modulo' no es correcto.";
+        return true;
+    }
 
-    if($modulo == "")
-        $errores[] = "No se ha seleccionado ningún módulo.";
-    else if(!in_array($modulo, $modulos_validos))
-        $errores[] = "El módulo '$modulo' no es correcto.";
+    function validarAsunto($asunto) {
+        if ($asunto == "") return "No se ha escrito ningún asunto.";
+        if (strlen($asunto) > 50) return "El asunto supera la cantidad máxima de caracteres (50).";
+        if (!ctype_alpha(str_replace(' ', '', $asunto))) return "El asunto contiene caracteres no válidos (solo letras y espacios permitidos).";
+        return true;
+    }
 
-    if(strlen($asunto) > 50 || ctype_alpha($asunto))
-        $errores[] = "El asunto tiene valores numericos o supera la cantidad máxima de caracteres (50).";
+    function validarDescripcion($descripcion) {
+        if ($descripcion == "") return "No se ha escrito ninguna descripción.";
+        if (strlen($descripcion) > 300) return "La descripción supera el límite de caracteres (300).";
+        return true;
+    }
 
-    if(strlen($descripcion) > 300)
-        $errores[] = "La descripción supera el límite de caracteres (300).";
+    // Validaciones
+    $resultado = validarEmail($email);
+    if ($resultado !== true) $errores[] = $resultado;
 
-    if(count($errores) > 0) {
+    $resultado = validarModulo($modulo, $modulos_validos);
+    if ($resultado !== true) $errores[] = $resultado;
+
+    $resultado = validarAsunto($asunto);
+    if ($resultado !== true) $errores[] = $resultado;
+
+    $resultado = validarDescripcion($descripcion);
+    if ($resultado !== true) $errores[] = $resultado;
+
+    if (count($errores) > 0) {
         echo "<html>
         <head>
             <title>Resultado</title>
@@ -42,8 +60,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
             <a href='formulario.php'>Enviar otra duda</a>
         </body>
         </html>";
-    } else 
-    {
+    } else {
         $linea = "\"$email\";\"$modulo\";\"$asunto\";\"$descripcion\"\n";
         $ruta = __DIR__. "/data/dudas.csv";
         file_put_contents($ruta, $linea, FILE_APPEND | LOCK_EX);
