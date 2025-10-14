@@ -4,6 +4,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     $modulo = isset($_POST["modulo"]) ? trim($_POST["modulo"]) : "";
     $asunto = trim($_POST["asunto"]);
     $descripcion = trim($_POST["descripcion"]);
+    $temas = isset($_POST["temas"]) ? $_POST["temas"] : array();
     $errores = array();
     $modulos_validos = array("DEW", "DOR", "DPL", "DSW", "SOJ", "CL4", "E1B", "IPW");
 
@@ -32,7 +33,13 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         return true;
     }
 
-    // Validaciones
+    function validarTemas($temas) {
+        $num = count($temas);
+        if ($num < 1) return "Debe seleccionar al menos un tema relacionado.";
+        if ($num > 3) return "No puede seleccionar más de 3 temas relacionados.";
+        return true;
+    }
+
     $resultado = validarEmail($email);
     if ($resultado !== true) $errores[] = $resultado;
 
@@ -44,6 +51,9 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
 
     $resultado = validarDescripcion($descripcion);
     if ($resultado !== true) $errores[] = $resultado;
+
+    $resultado = validarTemas($temas);
+    if($resultado !== true) $errores[] = $resultado;
 
     if (count($errores) > 0) {
         echo "<html>
@@ -61,7 +71,8 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
         </body>
         </html>";
     } else {
-        $linea = "\"$email\";\"$modulo\";\"$asunto\";\"$descripcion\"\n";
+        $temas_string = implode(", ", $temas);
+        $linea = "\"$email\";\"$modulo\";\"$asunto\";\"$descripcion\";\"$temas_string\"\n";
         $ruta = __DIR__. "/data/dudas.csv";
         file_put_contents($ruta, $linea, FILE_APPEND | LOCK_EX);
 
